@@ -14,7 +14,11 @@ func LoadConfig() {
 }
 
 func GetDBURL() string {
-	return os.Getenv("DB_URL")
+	url := os.Getenv("DB_URL")
+	if url == "" {
+		url = os.Getenv("DATABASE_URL")
+	}
+	return url
 }
 
 func GetJWTSecret() string {

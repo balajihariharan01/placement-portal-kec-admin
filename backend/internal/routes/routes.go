@@ -24,6 +24,8 @@ func SetupRoutes(app *fiber.App) {
 	auth.Post("/logout", handlers.LogoutUser)
 	// Public Webhooks
 	api.All("/webhooks/whatsapp", handlers.HandleWhatsAppWebhook)
+	api.Post("/webhooks/railway", handlers.HandleRailwayWebhook) // Railway deployment webhooks
+	api.Post("/webhooks/generic", handlers.HandleGenericWebhook) // Generic webhook for any external service
 
 	// Public Admin Auth Routes (But separated namespace)
 	// Even though they are public (for login), we group them under /v1/admin/auth

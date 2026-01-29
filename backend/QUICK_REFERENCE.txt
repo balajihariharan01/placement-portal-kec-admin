@@ -1,0 +1,170 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║                   🚀 RAILWAY WEBHOOK CONFIGURATION                       ║
+║                        Quick Reference Card                              ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ ✅ CORRECT RAILWAY WEBHOOK URL                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+
+  https://YOUR-BACKEND-DOMAIN.railway.app/api/webhooks/railway
+
+  ⚠️  IMPORTANT: Replace "YOUR-BACKEND-DOMAIN" with your actual Railway 
+                  backend deployment domain!
+
+  Example:
+  https://placement-portal-backend.railway.app/api/webhooks/railway
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 🔍 HOW TO FIND YOUR RAILWAY BACKEND DOMAIN                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+  1. Go to Railway Dashboard: https://railway.app
+  2. Select your PROJECT
+  3. Click on your BACKEND service (Go API)
+  4. Click "Settings" tab
+  5. Scroll to "Networking" section
+  6. Copy the PUBLIC DOMAIN (it should end with .railway.app)
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ ⚙️  RAILWAY WEBHOOK SETUP STEPS                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+  Step 1: Access Webhooks
+    Railway Dashboard → Your Project → Settings → Webhooks
+
+  Step 2: Add/Edit Webhook
+    - Click "Add Webhook" button
+    - Enter URL: https://YOUR-BACKEND.railway.app/api/webhooks/railway
+
+  Step 3: Select Events (Recommended)
+    ☑ deployment.success
+    ☑ deployment.failed
+    ☑ deployment.started
+
+  Step 4: Save
+    - Click "Save"
+    - Railway will test the endpoint
+    - ✅ You should see "200 OK" status
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ ❌ COMMON MISTAKES TO AVOID                                             │
+└─────────────────────────────────────────────────────────────────────────┘
+
+  ✗ Using frontend domain:
+    https://your-frontend.railway.app/api/webhooks/railway  ❌
+
+  ✗ Using frontend route:
+    https://your-backend.railway.app/login  ❌
+
+  ✗ Missing /api prefix:
+    https://your-backend.railway.app/webhooks/railway  ❌
+
+  ✗ Wrong HTTP method in URL (URL should accept POST):
+    URLs don't specify methods - the endpoint handles it!
+
+  ✓ Correct format:
+    https://your-backend.railway.app/api/webhooks/railway  ✅
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 🧪 TEST YOUR WEBHOOK                                                    │
+└─────────────────────────────────────────────────────────────────────────┘
+
+  PowerShell (Windows):
+    .\test_webhooks.ps1 -BaseUrl https://your-backend.railway.app
+
+  cURL (Linux/Mac):
+    ./test_webhooks.sh https://your-backend.railway.app
+
+  Manual Test:
+    curl -X POST https://your-backend.railway.app/api/webhooks/railway \
+      -H "Content-Type: application/json" \
+      -d '{"type":"deployment.success","projectId":"test","timestamp":"2026-01-29T05:30:00Z","data":{}}'
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ ✅ VERIFY SUCCESS                                                       │
+└─────────────────────────────────────────────────────────────────────────┘
+
+  In Railway Dashboard:
+    Settings → Webhooks → View webhook delivery logs
+    ✅ Status: 200 OK
+    ✅ Response time: < 200ms
+
+  In Application Logs:
+    Look for: "Railway Webhook Received:"
+    Example:
+      Railway Webhook Received:
+      {
+        "type": "deployment.success",
+        "projectId": "your-project",
+        ...
+      }
+      ✅ Deployment successful for project: your-project
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 📚 AVAILABLE WEBHOOK ENDPOINTS                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+
+  Railway Webhooks (Deployment Events):
+    POST /api/webhooks/railway
+
+  WhatsApp Cloud API Webhooks:
+    GET/POST /api/webhooks/whatsapp
+
+  Generic Webhooks (Any External Service):
+    POST /api/webhooks/generic
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 📞 TROUBLESHOOTING                                                      │
+└─────────────────────────────────────────────────────────────────────────┘
+
+  If you still get 405 errors:
+    1. Verify you're using the BACKEND domain, not frontend
+    2. Check that the URL includes /api/webhooks/railway
+    3. Ensure Railway is sending POST requests (it always does)
+    4. Check application logs for any errors
+    5. Run test script to verify endpoint is working
+
+  If you get 404 errors:
+    1. The endpoint might not be deployed yet
+    2. Check that the latest code is deployed on Railway
+    3. Verify the path is exactly: /api/webhooks/railway
+
+  If you get timeout errors:
+    1. Check if your backend is running
+    2. Verify Railway deployment status
+    3. Check Railway logs for startup errors
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 📝 ENVIRONMENT VARIABLES (Already Set in Railway)                       │
+└─────────────────────────────────────────────────────────────────────────┘
+
+  Required for Backend:
+    ✓ PORT (automatically set by Railway)
+    ✓ DB_URL (PostgreSQL connection string)
+    ✓ JWT_SECRET
+    ✓ SMTP_EMAIL, SMTP_PASSWORD (for emails)
+
+  No additional environment variables needed for webhooks!
+
+
+╔══════════════════════════════════════════════════════════════════════════╗
+║                        🎉 YOU'RE ALL SET!                                ║
+║                                                                          ║
+║  Once you update the Railway webhook URL, you should immediately see    ║
+║  200 OK responses instead of 405 Method Not Allowed errors.             ║
+║                                                                          ║
+║  The frontend and backend remain visually and functionally unchanged.   ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+Created: 2026-01-29
+Status: ✅ Production Ready
+Build: ✅ Successful

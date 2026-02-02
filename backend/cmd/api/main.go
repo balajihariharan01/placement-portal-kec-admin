@@ -37,6 +37,19 @@ import (
 // @in header
 // @name Authorization
 // @description Type "Bearer" followed by a space and JWT token.
+
+// getCORSOrigins returns the list of allowed origins for CORS
+// It reads from CORS_ALLOWED_ORIGINS environment variable (comma-separated)
+// Falls back to localhost for development if not set
+func getCORSOrigins() string {
+	origins := os.Getenv("CORS_ALLOWED_ORIGINS")
+	if origins == "" {
+		// Default to localhost for development
+		return "http://localhost:3000,http://127.0.0.1:3000"
+	}
+	return origins
+}
+
 func main() {
 	// Initialize application configuration (env vars, defaults)
 	config.LoadConfig()
@@ -64,7 +77,16 @@ func main() {
 
 	// Register global middleware
 	app.Use(logger.New()) // Request logging for debugging and audit
-	app.Use(cors.New())   // Enable CORS to allow requests from the frontend/client applications
+
+	// Configure CORS with environment-based allowed origins
+	corsConfig := cors.New(cors.Config{
+		AllowOrigins:     getCORSOrigins(),
+		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",
+		AllowHeaders:     "Origin,Content-Type,Accept,Authorization",
+		AllowCredentials: true,
+		MaxAge:           3600, // Cache preflight requests for 1 hour
+	})
+	app.Use(corsConfig)
 
 	// Register all application routes (handlers and groups)
 	routes.SetupRoutes(app)

@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["go_1_21"]
+
+[phases.build]
+cmds = ["go build -o bin/server cmd/api/main.go"]
+
+[phases.deploy]
+cmd = "./bin/server"
+
+[start]
+cmd = "./bin/server"

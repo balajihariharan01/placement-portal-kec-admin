@@ -1,0 +1,31 @@
+# Backend - Don't upload these to Railway
+
+# Development files
+.env
+.env.dev
+.env.local
+
+# Build artifacts
+bin/
+*.exe
+*.test
+
+# IDE
+.vscode/
+.idea/
+
+# Testing
+*_test.go
+coverage.txt
+
+# Documentation (not needed in deployment)
+*.md
+!README.md
+
+# Scripts
+*.ps1
+*.sh
+
+# Git
+.git/
+.gitignore

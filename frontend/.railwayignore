@@ -1,0 +1,38 @@
+# Frontend - Don't upload these to Railway
+
+# Development files
+.env.local
+.env.development.local
+
+# Build artifacts from Next.js
+.next/
+out/
+
+# Dependencies (will be installed during build)
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+
+# Testing
+*.test.ts
+*.test.tsx
+__tests__/
+coverage/
+
+# Documentation (not needed in deployment)
+*.md
+!README.md
+
+# Scripts
+*.ps1
+*.sh
+
+# Git
+.git/
+.gitignore
+
+# Other
+.DS_Store
+*.log
